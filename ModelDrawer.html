@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)file:///Users/Tony/Documents/Code/HTML5/EaselJS-release_v0.7.1/examples/Graphics_simple.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>EaselJS: Simple Graphics Example</title>
+
+	<link href="./ModelDrawer_files/demoStyles.css" rel="stylesheet" type="text/css">
+
+    <!-- Note: All core EaselJS classes are listed here: -->
+	<script type="text/javascript" src="./ModelDrawer_files/Event.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/EventDispatcher.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/IndexOf.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/UID.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Ticker.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Matrix2D.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Point.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Rectangle.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Shadow.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/SpriteSheet.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Graphics.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/DisplayObject.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Container.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Stage.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Bitmap.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Sprite.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/BitmapAnimation.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/BitmapText.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Shape.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Text.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/DOMElement.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/MouseEvent.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Filter.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/ButtonHelper.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/Touch.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/SpriteSheetUtils.js"></script>
+	<script type="text/javascript" src="./ModelDrawer_files/SpriteSheetBuilder.js"></script>
+    <script type="text/javascript" src="./scripts/ReadXML.js"></script>
+    <script type="text/javascript" src="./scripts/Drawing.js"></script>
+	<!-- We also provide hosted minified versions of all CreateJS libraries.
+	  http://code.createjs.com -->
+
+	<script type="text/javascript">
+	var canvas;
+	var stage;
+	function init() {
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xmlDoc= openxml(xmlhttp, "samplexml.xml");
+
+        var entities= getentity(xmlDoc, "entity");
+
+
+        canvasHolder = document.getElementById('divCanvas');
+        canvaswidth = canvasHolder.offsetWidth;
+        cavasheight = canvasHolder.offsetHeight;
+
+	    canvas = document.getElementById('myCanvas');
+
+	    stage = new createjs.Stage(canvas);
+
+        rectwidth = 100;
+        rectheight = 150;
+        spacer = 50;
+
+        startXpos = 100;
+        startYpos = 100;
+
+        possiblecolumns = (canvaswidth - startXpos)/(rectwidth + spacer);
+        numofrows = entities.length/possiblecolumns;
+
+        intnumofrows=Math.floor(entities.length/possiblecolumns);
+        if (intnumofrows<numofrows){
+            numofrows = numofrows + 1;
+        }
+
+        testheight = ((rectheight + spacer) * numofrows)+startYpos + spacer;
+
+        if (testheight > cavasheight){
+            cavasheight = testheight;
+
+        }
+        canvas.width = canvaswidth;
+        canvas.height = cavasheight;
+
+        currcol = 1;
+        xpos = startXpos;
+        ypos = startYpos;
+
+        for (i=0;i<entities.length;i++)
+        {
+
+            if (currcol > possiblecolumns){
+                xpos = startXpos;
+                currcol = 1;
+                ypos = ypos + rectheight + spacer
+            }
+            entityname = getproperty(entities[i],"name");
+            var s = drawRectangle(xpos, ypos, rectwidth, rectheight,10);
+            var Label = addLabel(xpos + rectwidth/2, ypos + 5,100,entityname);
+            stage.addChild(s);
+            stage.addChild(Label);
+            stage.update();
+
+            xpos = xpos + rectwidth + spacer;
+            currcol = currcol + 1;
+
+        }
+
+
+
+
+
+	}
+
+
+
+	</script>
+
+</head>
+<body onload="init()">
+    <div id="divCanvas" style="background-color: #ffffff;overflow: scroll; width:640px; height:480px">
+        <canvas id="myCanvas"/>
+        </canvas>
+
+    </div>
+</body></html>

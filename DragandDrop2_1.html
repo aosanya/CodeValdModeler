@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0088)file:///Users/Tony/Documents/Code/HTML5/EaselJS-release_v0.7.1/examples/DragAndDrop.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<title>EaselJS Example: Rollovers and Drag &amp; Drop</title>
+
+	<link href="./DragandDrop2_files/demoStyles.css" rel="stylesheet" type="text/css">
+
+	<!-- Note: All core EaselJS classes are listed here: -->
+	<script type="text/javascript" src="./DragandDrop2_files/Event.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/EventDispatcher.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/IndexOf.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/UID.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Ticker.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Matrix2D.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Point.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Rectangle.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Shadow.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/SpriteSheet.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Graphics.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/DisplayObject.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Container.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Stage.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Bitmap.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Sprite.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/BitmapAnimation.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/BitmapText.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Shape.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Text.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/DOMElement.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/MouseEvent.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Filter.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/ButtonHelper.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/Touch.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/SpriteSheetUtils.js"></script>
+	<script type="text/javascript" src="./DragandDrop2_files/SpriteSheetBuilder.js"></script>
+    <script type="text/javascript" src="./scripts/ReadXML.js"></script>
+    <script type="text/javascript" src="./scripts/Drawing.js"></script>
+	<!-- We also provide hosted minified versions of all CreateJS libraries.
+	  http://code.createjs.com -->
+
+	<script>
+
+	var canvas, stage;
+
+	var mouseTarget;	// the display object currently under the mouse, or being dragged
+	var dragStarted;	// indicates whether we are currently in a drag operation
+	var offset;
+	var update = true;
+
+	function init() {
+
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xmlDoc= openxml(xmlhttp, "samplexml.xml");
+
+        var entities= getentity(xmlDoc, "entity");
+
+
+        canvasHolder = document.getElementById('canvasHolder');
+        canvaswidth = canvasHolder.offsetWidth;
+        cavasheight = canvasHolder.offsetHeight;
+
+        canvas = document.getElementById('myCanvas');
+
+        stage = new createjs.Stage(canvas);
+
+        rectwidth = 100;
+        rectheight = 150;
+        spacer = 50;
+
+        startXpos = 100;
+        startYpos = 100;
+
+        possiblecolumns = (canvaswidth - startXpos)/(rectwidth + spacer);
+        numofrows = entities.length/possiblecolumns;
+
+        intnumofrows=Math.floor(entities.length/possiblecolumns);
+        if (intnumofrows < numofrows){
+            numofrows = numofrows + 1;
+        }
+
+        testheight = ((rectheight + spacer) * numofrows)+startYpos + spacer;
+
+        if (testheight > cavasheight){
+            cavasheight = testheight;
+
+        }
+        canvas.width = canvaswidth;
+        canvas.height = cavasheight;
+
+        currcol = 1;
+        xpos = startXpos;
+        ypos = startYpos;
+
+        for (i=0;i<entities.length;i++)
+        {
+
+            if (currcol > possiblecolumns){
+                xpos = startXpos;
+                currcol = 1;
+                ypos = ypos + rectheight + spacer
+            }
+            entityname = getproperty(entities[i],"name");
+            var s = drawRectangle(xpos, ypos, rectwidth, rectheight,10);
+            var Label = addLabel(xpos + rectwidth/2, ypos + 5,100,entityname);
+            stage.addChild(s);
+            stage.addChild(Label);
+            stage.update();
+
+            xpos = xpos + rectwidth + spacer;
+            currcol = currcol + 1;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        if (window.top != window) {
+			document.getElementById("header").style.display = "none";
+		}
+		document.getElementById("loader").className = "loader";
+		// create stage and point it to the canvas:
+		canvas = document.getElementById("myCanvas");
+
+		//check to see if we are running in a browser with touch support
+		stage = new createjs.Stage(canvas);
+
+		// enable touch interactions if supported on the current device:
+		createjs.Touch.enable(stage);
+
+		// enabled mouse over / out events
+		stage.enableMouseOver(10);
+		stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+
+		handleImageLoad();
+	}
+
+	function stop() {
+		createjs.Ticker.removeEventListener("tick", tick);
+	}
+
+	function handleImageLoad(event) {
+		var s;
+		var container = new createjs.Container();
+		stage.addChild(container);
+
+		// create and populate the screen with random daisies:
+		// for(var i = 0; i < 100; i++){
+            x = 640 * Math.random()|0;
+            y = 480 * Math.random()|0;
+
+            var s = new createjs.Shape();
+            var g = s.graphics;
+
+            //draw main section
+            g.setStrokeStyle(.1, 'round', 'round');
+            g.beginStroke("#000");
+            g.beginFill("#fff");
+            g.drawRoundRect(x, y,50,50,20);
+            g.endFill();
+
+            container.addChild(s);
+
+
+            s.name = "bmp_1";
+            s.cursor = "pointer";
+			
+			// using "on" binds the listener to the scope of the currentTarget by default
+			// in this case that means it executes in the scope of the button.
+			s.on("mousedown", function(evt) {
+				this.parent.addChild(this);
+				this.offset = {x:this.x-evt.stageX, y:this.y-evt.stageY};
+			});
+			
+			// the pressmove event is dispatched when the mouse moves after a mousedown on the target until the mouse is released.
+			s.on("pressmove", function(evt) {
+				this.x = evt.stageX+ this.offset.x;
+				this.y = evt.stageY+ this.offset.y;
+				// indicate that the stage should be updated on the next tick:
+				update = true;
+			});
+			
+			s.on("rollover", function(evt) {
+				//this.scaleX = this.scaleY = this.scale*1.2;
+				//update = true;
+			});
+			
+			s.on("rollout", function(evt) {
+				//this.scaleX = this.scaleY = this.scale;
+				//update = true;
+			});
+
+		//}
+
+		document.getElementById("loader").className = "";
+		createjs.Ticker.addEventListener("tick", tick);
+	}
+
+	function tick(event) {
+		// this set makes it so the stage only re-renders when an event handler indicates a change has happened.
+		if (update) {
+			update = false; // only update once
+			stage.update(event);
+		}
+	}
+	</script>
+
+</head>
+
+<body onload="init();">
+
+	<div id="loader" class=""></div>
+
+
+	<div id="canvasHolder" class="canvasHolder" style="background-color: #ffffff;overflow: scroll; width:640px; height:480px">
+		<canvas id="myCanvas"></canvas>
+	</div>
+
+
+</body></html>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+<entity name="tbltest" schema="sakila">
+    <property name="ID1" nullable="false" type="int"></property>
+    <property name="ID2" nullable="false" type="int"></property>
+    <property name="Col1" null="" precision="45" type="varchar"></property>
+    <primarykey>
+        <column name="ID1"></column>
+        <column name="ID2"></column>
+    </primarykey>
+</entity>
+        <!--Table `sakila`.`actor`-->
+<entity default_character_set="utf8" engine="InnoDB" name="actor" schema="sakila">
+<property auto_increment="true" name="actor_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="first_name" nullable="false" precision="45" type="varchar"></property>
+<property name="last_name" nullable="false" precision="45" type="varchar"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="actor_id"></column>
+</primarykey>
+<index name="idx_actor_last_name">
+    <column name="last_name" order="ASC"></column>
+</index>
+</entity>
+        <!--Table 'sakila'.'country'-->
+<entity default_character_set="utf8" engine="InnoDB" name="country" schema="sakila">
+<property auto_increment="true" name="country_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="country" nullable="false" precision="50" type="varchar"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="country_id"></column>
+</primarykey>
+</entity>
+        <!--Table 'sakila'.'city'-->
+<entity default_character_set="utf8" engine="InnoDB" name="city" schema="sakila">
+<property auto_increment="true" name="city_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="city" nullable="false" precision="50" type="varchar"></property>
+<property name="country_id" nullable="false" type="smallint" unsigned="false"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="city_id"></column>
+</primarykey>
+<index name="idx_fk_country_id">
+    <column name="country_id" order="ASC"></column>
+</index>
+<constraint name="fk_city_country" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="country">
+    <reference column="country_id" referenced="country_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'address'-->
+<entity default_character_set="utf8" engine="InnoDB" name="address" schema="sakila">
+<property auto_increment="true" name="address_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="address" nullable="false" precision="50" type="varchar"></property>
+<property default="NULL" name="address2" nullable="true" precision="50" type="varchar"></property>
+<property name="district" nullable="false" precision="20" type="varchar"></property>
+<property name="city_id" nullable="false" type="smallint" unsigned="false"></property>
+<property default="NULL" name="postal_code" nullable="true" precision="10" type="varchar"></property>
+<property name="phone" nullable="false" precision="20" type="varchar"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="address_id"></column>
+</primarykey>
+<index name="idx_fk_city_id">
+    <column name="city_id" order="ASC"></column>
+</index>
+<constraint name="fk_address_city" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="city">
+    <reference column="city_id" referenced="city_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'category'-->
+<entity default_character_set="utf8" engine="InnoDB" name="category" schema="sakila">
+<property auto_increment="true" name="category_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property name="name" nullable="false" precision="25" type="varchar"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="category_id"></column>
+</primarykey>
+</entity>
+        <!--Table 'sakila'.'staff'-->
+<entity default_character_set="utf8" engine="InnoDB" name="staff" schema="sakila">
+<property auto_increment="true" name="staff_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property name="first_name" nullable="false" precision="45" type="varchar"></property>
+<property name="last_name" nullable="false" precision="45" type="varchar"></property>
+<property name="address_id" nullable="false" type="smallint" unsigned="false"></property>
+<property default="NULL" name="picture" nullable="true" type="blob"></property>
+<property default="NULL" name="email" nullable="true" precision="50" type="varchar"></property>
+<property name="store_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property column="1" default="TRUE" name="active" nullable="false" type="tinyint"></property>
+<property name="username" nullable="false" precision="16" type="varchar"></property>
+<property default="NULL" name="password" nullable="true" precision="40" type="binary"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="staff_id"></column>
+</primarykey>
+<index name="idx_fk_store_id">
+    <column name="store_id" order="ASC"></column>
+</index>
+<index name="idx_fk_address_id">
+    <column name="address_id" order="ASC"></column>
+</index>
+<constraint  name="fk_staff_store" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="store">
+    <reference column="store_id" referenced="store_id"></reference>
+</constraint>	<constraint name="fk_staff_address" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="address">
+    <reference column="address_id" referenced="address_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'store'-->
+<entity default_character_set="utf8" engine="InnoDB" name="store" schema="sakila">
+<property auto_increment="true" name="store_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property name="manager_staff_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property name="address_id" nullable="false" type="smallint" unsigned="false"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="store_id"></column>
+</primarykey>
+<uniqueindex name="idx_unique_manager">
+    <column name="manager_staff_id" order="ASC"></column>
+</uniqueindex>
+<index name="idx_fk_address_id">
+    <column name="address_id" order="ASC"></column>
+</index>
+<constraint  name="fk_store_staff" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="staff">
+    <reference column="manager_staff_id" referenced="staff_id"></reference>
+</constraint>	<constraint name="fk_store_address" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="address">
+    <reference column="address_id" referenced="address_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'customer'-->
+<entity comment="Tablestoringallcustomers.Holdsforeignkeystotheaddre" default_character_set="utf8" engine="InnoDB" name="sakila.customer">
+<property auto_increment="true" name="customer_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="store_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property name="first_name" nullable="false" precision="45" type="varchar"></property>
+<property name="last_name" nullable="false" precision="45" type="varchar"></property>
+<property default="NULL" name="email" nullable="true" precision="50" type="varchar"></property>
+<property name="address_id" nullable="false" type="smallint" unsigned="false"></property>
+<property column="1" default="TRUE" name="active" nullable="false" type="tinyint"></property>
+<property name="create_date" nullable="false" type="datetime"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="true" type="timestamp"></property>
+<primarykey>
+<column name="customer_id"></column>
+</primarykey>
+<index name="idx_fk_store_id">
+<column name="store_id" order="ASC"></column>
+</index>
+<index name="idx_fk_address_id">
+<column name="address_id" order="ASC"></column>
+</index>
+<index name="idx_last_name">
+<column name="last_name" order="ASC"></column>
+</index>
+<constraint  name="fk_customer_address" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="address">
+<reference column="address_id" referenced="address_id"></reference>
+</constraint>	<constraint name="fk_customer_store" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="store">
+<reference column="store_id" referenced="store_id"></reference>
+</constraint>
+        </entity>
+        <!--Table 'sakila'.'language'-->
+<entity default_character_set="utf8" engine="InnoDB" name="language" schema="sakila">
+<property auto_increment="true" name="language_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property column="20" name="name" nullable="false" type="char"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="language_id"></column>
+</primarykey>
+</entity>
+        <!--Table 'sakila'.'film'-->
+<entity default_character_set="utf8" engine="InnoDB" name="film" schema="sakila">
+<property auto_increment="true" name="film_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="title" nullable="false" precision="255" type="varchar"></property>
+<property default="NULL" name="description" nullable="true" type="text"></property>
+<property default="NULL" name="release_year" nullable="true" type="year"></property>
+<property name="language_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property default="NULL" name="original_language_id" nullable="true" type="tinyint" unsigned="false"></property>
+<property default="3" name="rental_duration" nullable="false" type="tinyint" unsigned="false"></property>
+<property precision="4,2" default="4.99" name="rental_rate" nullable="false" type="decimal"></property>
+<property default="NULL" name="length" nullable="true" type="smallint" unsigned="false"></property>
+<property precision="5,2=" default="19.99" name="replacement_cost" nullable="false" type="decimal"></property>
+<property default="" enum="'G','PG','PG-13','R','NC-17'" name="rating" nullable="true"></property>
+<property default="NULL" name="special_features" nullable="true" set="'Trailers','Commentaries','Deleted Scenes','Behind the Scenes'"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<index name="idx_title">
+<column name="title" order="ASC"></column>
+</index>
+<index name="idx_fk_language_id">
+<column name="language_id" order="ASC"></column>
+</index>
+<index name="idx_fk_original_language_id">
+<column name="original_language_id" order="ASC"></column>
+</index>
+<primarykey>
+<column name="film_id"></column>
+</primarykey>
+<constraint  name="fk_film_language" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="language">
+<reference column="language_id" referenced="language_id"></reference>
+</constraint>	<constraint name="fk_film_language_original" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="language">
+<reference column="original_language_id" referenced="language_id"></reference>
+</constraint>
+        </entity>
+        <!--Table 'sakila'.'film_actor'-->
+<entity default_character_set="utf8" engine="InnoDB" name="film_actor" schema="sakila">
+<property name="actor_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="film_id" nullable="false" type="smallint" unsigned="false"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="actor_id"></column>
+    <column name="film_id"></column>
+</primarykey>
+<index name="idx_fk_film_id">
+    <column name="film_id" order="ASC"></column>
+</index>
+<index name="fk_film_actor_actor_idx">
+    <column name="actor_id" order="ASC"></column>
+</index>
+<constraint  name="fk_film_actor_actor" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="actor">
+    <reference column="actor_id" referenced="actor_id"></reference>
+</constraint>	<constraint name="fk_film_actor_film" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="film">
+    <reference column="film_id" referenced="film_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'film_category'-->
+<entity default_character_set="utf8" engine="InnoDB" name="film_category" schema="sakila">
+<property name="film_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="category_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="film_id"></column>
+    <column name="category_id"></column>
+</primarykey>
+<index name="fk_film_category_category_idx">
+    <column name="category_id" order="ASC"></column>
+</index>
+<index name="fk_film_category_film_idx">
+    <column name="film_id" order="ASC"></column>
+</index>
+<constraint  name="fk_film_category_film" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="film">
+    <reference column="film_id" referenced="film_id"></reference>
+</constraint>	<constraint name="fk_film_category_category" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="category">
+    <reference column="category_id" referenced="category_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'film_text'
+        -->
+<entity engine="MyISAM" name="film_text" schema="sakila">
+<property name="film_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="title" nullable="false" precision="255" type="varchar"></property>
+<property default="NULL" name="description" nullable="true" type="text"></property>
+<primarykey>
+    <column name="film_id"></column>
+</primarykey>
+<fulltextindex name="idx_title_description">
+    <column name="title" order="ASC"></column>
+    <column name="description" order="ASC"></column>
+</fulltextindex>
+</entity>
+        <!--Table 'sakila'.'inventory'-->
+<entity default_character_set="utf8" engine="InnoDB" name="inventory" schema="sakila">
+<property auto_increment="true" name="inventory_id" nullable="false" type="mediumint" unsigned="false"></property>
+<property name="film_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="store_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="inventory_id"></column>
+</primarykey>
+<index name="idx_fk_film_id">
+    <column name="film_id" order="ASC"></column>
+</index>
+<index name="idx_store_id_film_id">
+    <column name="store_id" order="ASC"></column>
+    <column name="film_id" order="ASC"></column>
+</index>
+<index name="fk_inventory_store_idx">
+    <column name="store_id" order="ASC"></column>
+</index>
+<constraint  name="fk_inventory_store" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="store">
+    <reference column="store_id" referenced="store_id"></reference>
+</constraint>	<constraint name="fk_inventory_film" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="film">
+    <reference column="film_id" referenced="film_id"></reference>
+</constraint>
+</entity>
+        <!--Table 'sakila'.'rental'-->
+<entity default_character_set="utf8" engine="InnoDB" name="rental" schema="sakila">
+<property auto_increment="true" name="rental_id" nullable="false" type="int"></property>
+<property name="rental_date" nullable="false" type="datetime"></property>
+<property name="inventory_id" nullable="false" type="mediumint" unsigned="false"></property>
+<property name="customer_id" nullable="false" type="smallint" unsigned="false"></property>
+<property default="NULL" name="return_date" nullable="true" type="datetime"></property>
+<property name="staff_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="false" type="timestamp"></property>
+<primarykey>
+    <column name="rental_id"></column>
+</primarykey>
+<uniqueindex name="">
+    <column name="rental_date" order="ASC"></column>
+    <column name="inventory_id" order="ASC"></column>
+    <column name="customer_id" order="ASC"></column>
+</uniqueindex>
+<index name="idx_fk_inventory_id">
+    <column name="inventory_id" order="ASC"></column>
+</index>
+<index name="idx_fk_customer_id">
+    <column name="customer_id" order="ASC"></column>
+</index>
+<index name="idx_fk_staff_id">
+    <column name="staff_id" order="ASC"></column>
+</index>
+<constraint  name="fk_rental_staff" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="staff">
+    <reference column="staff_id" referenced="staff_id"></reference>
+</constraint>	<constraint  name="fk_rental_inventory" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="inventory">
+    <reference column="inventory_id" referenced="inventory_id"></reference>
+</constraint>	<constraint name="fk_rental_customer" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="customer">
+    <reference column="customer_id" referenced="customer_id"></reference>
+</constraint>
+</entity>
+        <!--
+         Table 'sakila'.'payment'-->
+<entity default_character_set="utf8" engine="InnoDB" name="payment" schema="sakila">
+<property auto_increment="true" name="payment_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="customer_id" nullable="false" type="smallint" unsigned="false"></property>
+<property name="staff_id" nullable="false" type="tinyint" unsigned="false"></property>
+<property default="NULL" name="rental_id" nullable="true" type="int"></property>
+<property column="5,2" name="amount" nullable="false" type="decimal"></property>
+<property name="payment_date" nullable="false" type="datetime"></property>
+<property default="CURRENT_TIMESTAMP" name="last_update" nullable="true" type="timestamp"></property>
+<primarykey>
+    <column name="payment_id"></column>
+</primarykey>
+<index name="idx_fk_staff_id">
+    <column name="staff_id" order="ASC"></column>
+</index>
+<index name="idx_fk_customer_id">
+    <column name="customer_id" order="ASC"></column>
+</index>
+<index name="fk_payment_rental_idx">
+    <column name="rental_id" order="ASC"></column>
+</index>
+<constraint  delete="" name="fk_payment_rental" null="" on="" onupdate="cascade" schema_referenced="sakila" tbl_referenced="rental" type="set">
+    <reference column="rental_id" referenced="rental_id"></reference>
+</constraint>	<constraint  name="fk_payment_customer" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="customer">
+    <reference column="customer_id" referenced="customer_id"></reference>
+</constraint>	<constraint name="fk_payment_staff" ondelete="restrict" onupdate="cascade" schema_referenced="sakila" tbl_referenced="staff">
+    <reference column="staff_id" referenced="staff_id"></reference>
+</constraint>
+</entity>
+</entities>
